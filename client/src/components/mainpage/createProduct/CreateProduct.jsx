@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const CreateProduct = () => {
   const state = useContext(GobalState);
   const [categories] = state.CategoryApi.categories;
-  const [callback,setCallback] = state.ProductsApi.callback;
+  const [callback, setCallback] = state.ProductsApi.callback;
   const data = {
     product_id: "",
     title: "",
@@ -109,19 +109,26 @@ const CreateProduct = () => {
     try {
       !isAdmin && alert("You're not an admin");
       if (!images) {
-        return alert("No image upload");ư
+        return alert("No image upload");
       }
-      if(edit){
-        await axios.put(`/api/product/${product._id}`,{ ...product, images },{
-          headers: { Authorization: token },
-        });
+      if (edit) {
+        await axios.put(
+          `/api/product/${product._id}`,
+          { ...product, images },
+          {
+            headers: { Authorization: token },
+          }
+        );
+      } else {
+        await axios.post(
+          "/api/product",
+          { ...product, images },
+          {
+            headers: { Authorization: token },
+          }
+        );
       }
-      else{
-        await axios.post("/api/product",{ ...product, images },{
-          headers: { Authorization: token },
-        });
-      }
-      setCallback(!callback)
+      setCallback(!callback);
       setImage(false);
       setProduct(data);
       navigate.push("/");
@@ -167,7 +174,6 @@ const CreateProduct = () => {
               value={product.title}
               name="title"
               onChange={onChangeInput}
-              
             />
           </label>
         </div>
